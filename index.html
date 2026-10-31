@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevDocs - Web Development & Programming Learning Portal</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        code, pre, .font-mono { font-family: 'Fira Code', monospace; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(0,0,0,0.05); }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(156,163,175,0.5); border-radius: 3px; }
+        .dark .custom-scrollbar::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
+        .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(75,85,99,0.5); }
+    </style>
+</head>
+<body class="h-full bg-gray-50 text-gray-800 dark:bg-gray-900 dark:text-gray-100 flex flex-col transition-colors duration-200 overflow-hidden">
+
+    <!-- TOP HEADER / NAVBAR -->
+    <header class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex-none z-30 shadow-sm">
+        <!-- Upper Nav Row -->
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+            <!-- Logo & Mobile Menu Toggle -->
+            <div class="flex items-center gap-3">
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 dark:text-gray-300 hover:text-brand-600 p-2 rounded-lg focus:outline-none">
+                    <i class="fa-solid fa-bars text-xl"></i>
+                </button>
+                <a href="#" class="flex items-center gap-2 font-bold text-xl text-brand-600 dark:text-brand-500 tracking-tight">
+                    <i class="fa-solid fa-code text-2xl"></i>
+                    <span>DevDocs</span>
+                </a>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="flex-1 max-w-md relative hidden sm:block">
+                <div class="relative">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input type="text" id="global-search" placeholder="Search tutorials, functions, tags..." 
+                           class="w-full pl-9 pr-4 py-2 text-sm bg-gray-100 dark:bg-gray-700 border border-transparent rounded-lg focus:outline-none focus:border-brand-500 focus:bg-white dark:focus:bg-gray-800 transition">
+                </div>
+                <div id="search-results" class="hidden absolute top-full left-0 right-0 mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-xl max-h-80 overflow-y-auto z-50 p-2"></div>
+            </div>
+
+            <!-- Controls (Language, Theme, Sandbox Toggle) -->
+            <div class="flex items-center gap-3">
+                <!-- Language Selector -->
+                <div class="relative">
+                    <select id="lang-selector" class="bg-gray-100 dark:bg-gray-700 text-xs sm:text-sm font-medium py-1.5 px-3 rounded-lg border-0 focus:ring-2 focus:ring-brand-500 cursor-pointer">
+                        <option value="EN">🌐 English</option>
+                        <option value="HI">🌐 हिन्दी (Hindi)</option>
+                        <option value="ES">🌐 Español</option>
+                        <option value="RU">🌐 Русский</option>
+                    </select>
+                </div>
+
+                <!-- Dark/Light Theme Toggle -->
+                <button id="theme-toggle" class="p-2 text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition" title="Toggle Light/Dark Theme">
+                    <i class="fa-solid fa-moon text-lg dark:hidden"></i>
+                    <i class="fa-solid fa-sun text-lg hidden dark:block text-yellow-400"></i>
+                </button>
+
+                <!-- Sandbox Drawer Button -->
+                <button id="open-sandbox-btn" class="bg-brand-600 hover:bg-brand-700 text-white font-medium text-xs sm:text-sm px-3.5 py-2 rounded-lg shadow-sm flex items-center gap-2 transition">
+                    <i class="fa-solid fa-terminal"></i>
+                    <span class="hidden md:inline" data-i18n="playground">Try Editor</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Course Selector Bar (Horizontal Scrollable) -->
+        <nav class="bg-gray-100 dark:bg-gray-900 border-t border-gray-200 dark:border-gray-700 px-4 overflow-x-auto custom-scrollbar flex items-center gap-1 text-sm font-medium">
+            <button data-course="html" class="course-tab px-4 py-2.5 border-b-2 border-brand-500 text-brand-600 dark:text-brand-400 whitespace-nowrap">HTML</button>
+            <button data-course="css" class="course-tab px-4 py-2.5 border-b-2 border-transparent hover:text-brand-600 text-gray-600 dark:text-gray-400 whitespace-nowrap">CSS</button>
+            <button data-course="js" class="course-tab px-4 py-2.5 border-b-2 border-transparent hover:text-brand-600 text-gray-600 dark:text-gray-400 whitespace-nowrap">JAVASCRIPT</button>
+            <button data-course="sql" class="course-tab px-4 py-2.5 border-b-2 border-transparent hover:text-brand-600 text-gray-600 dark:text-gray-400 whitespace-nowrap">SQL</button>
+            <button data-course="python" class="course-tab px-4 py-2.5 border-b-2 border-transparent hover:text-brand-600 text-gray-600 dark:text-gray-400 whitespace-nowrap">PYTHON</button>
+            <button data-course="java" class="course-tab px-4 py-2.5 border-b-2 border-transparent hover:text-brand-600 text-gray-600 dark:text-gray-400 whitespace-nowrap">JAVA</button>
+            <button data-course="php" class="course-tab px-4 py-2.5 border-b-2 border-transparent hover:text-brand-600 text-gray-600 dark:text-gray-400 whitespace-nowrap">PHP</button>
+            <button data-course="c" class="course-tab px-4 py-2.5 border-b-2 border-transparent hover:text-brand-600 text-gray-600 dark:text-gray-400 whitespace-nowrap">C</button>
+            <button data-course="cpp" class="course-tab px-4 py-2.5 border-b-2 border-transparent hover:text-brand-600 text-gray-600 dark:text-gray-400 whitespace-nowrap">C++</button>
+            <button data-course="csharp" class="course-tab px-4 py-2.5 border-b-2 border-transparent hover:text-brand-600 text-gray-600 dark:text-gray-400 whitespace-nowrap">C#</button>
+            <button data-course="react" class="course-tab px-4 py-2.5 border-b-2 border-transparent hover:text-brand-600 text-gray-600 dark:text-gray-400 whitespace-nowrap">REACT</button>
+            <button data-course="mysql" class="course-tab px-4 py-2.5 border-b-2 border-transparent hover:text-brand-600 text-gray-600 dark:text-gray-400 whitespace-nowrap">MYSQL</button>
+        </nav>
+    </header>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="flex-1 flex overflow-hidden relative">
+
+        <!-- SIDEBAR NAVIGATION -->
+        <aside id="sidebar" class="w-72 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex-none overflow-y-auto custom-scrollbar flex flex-col absolute md:relative z-20 h-full transition-transform duration-300 -translate-x-full md:translate-x-0">
+            <div id="sidebar-content" class="p-4 space-y-6">
+                <!-- Dynamically rendered sidebar topic groups go here -->
+            </div>
+        </aside>
+
+        <!-- MAIN LESSON CONTENT AREA -->
+        <main class="flex-1 overflow-y-auto custom-scrollbar p-4 md:p-8 bg-white dark:bg-gray-900" id="main-content-scroll">
+            <div class="max-w-4xl mx-auto space-y-6">
+
+                <!-- Breadcrumb & Nav Header -->
+                <div class="flex items-center justify-between text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                    <div class="flex items-center gap-2">
+                        <span id="bc-course" class="font-semibold text-brand-600 dark:text-brand-400 uppercase">HTML</span>
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                        <span id="bc-section">Tutorial</span>
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                        <span id="bc-topic" class="text-gray-800 dark:text-gray-200 font-medium">HTML Home</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <button id="prev-btn" class="px-3 py-1.5 rounded border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700 flex items-center gap-1">
+                            <i class="fa-solid fa-arrow-left"></i> <span data-i18n="prev">Previous</span>
+                        </button>
+                        <button id="next-btn" class="px-3 py-1.5 rounded bg-brand-600 hover:bg-brand-700 text-white flex items-center gap-1 font-medium">
+                            <span data-i18n="next">Next</span> <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Topic Heading -->
+                <div class="border-b border-gray-200 dark:border-gray-700 pb-4">
+                    <h1 id="topic-title" class="text-2xl sm:text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                        HTML Tutorial
+                    </h1>
+                    <p id="topic-subtitle" class="text-gray-600 dark:text-gray-300 mt-2 text-base sm:text-lg">
+                        Learn the fundamental language for creating web pages.
+                    </p>
+                </div>
+
+                <!-- Interactive Explanation Block -->
+                <div id="topic-body" class="prose dark:prose-invert max-w-none space-y-4 text-gray-700 dark:text-gray-300">
+                    <!-- Dynamic tutorial text loaded here -->
+                </div>
+
+                <!-- Interactive "Try It Yourself" Live Code Preview Card -->
+                <div id="editor-card" class="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 sm:p-6 shadow-sm space-y-4">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-laptop-code text-brand-600"></i>
+                            <span data-i18n="tryItTitle">Example & Interactive Sandbox</span>
+                        </h3>
+                        <span class="text-xs bg-brand-100 dark:bg-brand-900/50 text-brand-700 dark:text-brand-300 px-2.5 py-1 rounded-full font-medium">Interactive</span>
+                    </div>
+                    
+                    <pre id="code-snippet-box" class="bg-gray-900 text-emerald-400 p-4 rounded-lg overflow-x-auto text-sm font-mono leading-relaxed border border-gray-800">
+<!-- Sample code snippet -->
+                    </pre>
+
+                    <div class="flex flex-wrap gap-3">
+                        <button id="launch-editor-btn" class="bg-brand-600 hover:bg-brand-700 text-white text-sm font-semibold px-4 py-2 rounded-lg transition flex items-center gap-2 shadow-sm">
+                            <i class="fa-solid fa-play"></i> <span data-i18n="tryItBtn">Try It Yourself &raquo;</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Interactive Topic Quiz & Assessment Card -->
+                <div id="quiz-card" class="bg-emerald-50/50 dark:bg-gray-800/80 border border-emerald-200 dark:border-gray-700 rounded-xl p-5 sm:p-6 space-y-4">
+                    <div class="flex items-center justify-between border-b border-emerald-100 dark:border-gray-700 pb-3">
+                        <h3 class="text-lg font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                            <i class="fa-solid fa-lightbulb text-amber-500"></i>
+                            <span data-i18n="quizTitle">Test Your Knowledge</span>
+                        </h3>
+                        <span id="quiz-score" class="text-xs font-semibold text-brand-700 dark:text-brand-400 bg-brand-100 dark:bg-gray-700 px-2.5 py-1 rounded-full">
+                            Score: 0
+                        </span>
+                    </div>
+                    <p id="quiz-question" class="font-medium text-gray-800 dark:text-gray-200">
+                        What does HTML stand for?
+                    </p>
+                    <div id="quiz-options" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- Options generated dynamically -->
+                    </div>
+                    <div id="quiz-feedback" class="hidden p-3 rounded-lg text-sm font-medium"></div>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- LIVE INTERACTIVE PLAYGROUND / EDITOR DRAWER -->
+        <div id="sandbox-drawer" class="fixed inset-y-0 right-0 w-full md:w-1/2 lg:w-5/12 bg-gray-900 text-white z-40 shadow-2xl transition-transform duration-300 translate-x-full flex flex-col border-l border-gray-800">
+            <!-- Sandbox Header -->
+            <div class="bg-gray-950 px-4 py-3 border-b border-gray-800 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-code text-brand-500"></i>
+                    <span class="font-semibold text-sm" id="sandbox-title">DevDocs Sandbox Editor</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button id="run-code-btn" class="bg-brand-600 hover:bg-brand-500 text-white text-xs font-semibold px-3 py-1.5 rounded flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-play"></i> Run Code
+                    </button>
+                    <button id="close-sandbox-btn" class="text-gray-400 hover:text-white p-1 rounded">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Code Input Area -->
+            <div class="flex-1 flex flex-col border-b border-gray-800 overflow-hidden">
+                <div class="bg-gray-800/80 px-4 py-1.5 text-xs text-gray-400 font-mono flex justify-between items-center">
+                    <span>Source Code Editor</span>
+                    <span id="editor-lang-tag" class="uppercase text-brand-400 font-bold">HTML</span>
+                </div>
+                <textarea id="sandbox-code-input" class="w-full flex-1 p-4 bg-gray-900 text-gray-100 font-mono text-sm resize-none focus:outline-none custom-scrollbar leading-relaxed" spellcheck="false"></textarea>
+            </div>
+
+            <!-- Output Tabs & Display -->
+            <div class="h-1/2 flex flex-col bg-gray-950">
+                <div class="flex items-center border-b border-gray-800 bg-gray-900 text-xs">
+                    <button id="tab-preview-btn" class="px-4 py-2 font-medium border-b-2 border-brand-500 text-white">Live Preview</button>
+                    <button id="tab-console-btn" class="px-4 py-2 font-medium border-b-2 border-transparent text-gray-400 hover:text-gray-200">Terminal Output</button>
+                </div>
+                
+                <!-- Frame / Terminal Output Area -->
+                <div class="flex-1 relative overflow-hidden bg-white text-black dark:bg-gray-950 dark:text-white">
+                    <iframe id="sandbox-iframe" class="w-full h-full border-0 bg-white"></iframe>
+                    <pre id="sandbox-terminal" class="hidden w-full h-full p-4 font-mono text-xs text-emerald-400 bg-gray-950 overflow-y-auto custom-scrollbar border-0"></pre>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MAIN JAVASCRIPT APP LOGIC & CURRICULUM DATA -->
+    <script>
+        // MULTI-LANGUAGE TRANSLATION DICTIONARY
+        const i18nData = {
+            EN: {
+                playground: "Try Editor",
+                prev: "Previous",
+                next: "Next",
+                tryItTitle: "Example & Interactive Sandbox",
+                tryItBtn: "Try It Yourself »",
+                quizTitle: "Test Your Knowledge",
+                correctMsg: "🎉 Correct! Great job.",
+                wrongMsg: "❌ Incorrect. Try again!",
+            },
+            HI: {
+                playground: "एडिटर चलाएं",
+                prev: "पिछला",
+                next: "अगला",
+                tryItTitle: "उदाहरण और लाइव सैंडबॉक्स",
+                tryItBtn: "खुद प्रयास करें »",
+                quizTitle: "ज्ञान की परीक्षा लें",
+                correctMsg: "🎉 सही उत्तर! बहुत बढ़िया।",
+                wrongMsg: "❌ गलत उत्तर। पुनः प्रयास करें!",
+            },
+            ES: {
+                playground: "Probar Editor",
+                prev: "Anterior",
+                next: "Siguiente",
+                tryItTitle: "Ejemplo y Editor Interactivo",
+                tryItBtn: "Pruébalo Tú Mismo »",
+                quizTitle: "Pon a Prueba tu Conocimiento",
+                correctMsg: "🎉 ¡Correcto! Buen trabajo.",
+                wrongMsg: "❌ Incorrecto. ¡Inténtalo de nuevo!",
+            },
+            RU: {
+                playground: "Запустить Редактор",
+                prev: "Назад",
+                next: "Вперед",
+                tryItTitle: "Пример и Интерактивный Песочница",
+                tryItBtn: "Попробовать Самостоятельно »",
+                quizTitle: "Проверьте Свои Знания",
+                correctMsg: "🎉 Правильно! Отличная работа.",
+                wrongMsg: "❌ Неправильно. Попробуйте еще раз!",
+            }
+        };
+
+        // FULL DETAILED CURRICULUM STRUCTURE & LESSON DATA FOR ALL COURSES
+        const curriculum = {
+            html: {
+                title: "HTML Tutorial",
+                subtitle: "The standard markup language for creating Web pages.",
+                sections: [
+                    {
+                        name: "HTML Tutorial",
+                        topics: [
+                            "HTML HOME", "HTML Introduction", "HTML Editors", "HTML Basic", 
+                            "HTML Elements", "HTML Attributes", "HTML Headings", "HTML Paragraphs", 
+                            "HTML Styles", "HTML Formatting", "HTML Quotations", "HTML Comments", 
+                            "HTML Colors", "HTML CSS", "HTML Links", "HTML Images", "HTML Project", 
+                            "HTML Favicon", "HTML Page Title", "HTML Tables", "HTML Lists", 
+                            "HTML Block & Inline", "HTML Div", "HTML Classes", "HTML Id", 
+                            "HTML Buttons", "HTML Iframes", "HTML JavaScript", "HTML File Paths", 
+                            "HTML Head", "HTML Layout", "HTML Responsive", "HTML Computercode", 
+                            "HTML Semantics", "HTML Style Guide", "HTML Entities", "HTML Symbols", 
+                            "HTML Emojis", "HTML Charsets", "HTML URL Encode", "HTML vs. XHTML"
+                        ]
+                    },
+                    {
+                        name: "HTML Forms",
+                        topics: [
+                            "HTML Forms", "HTML Form Attributes", "HTML Form Elements", 
+                            "HTML Input Types", "HTML Input Attributes", "Input Form Attributes"
+                        ]
+                    },
+                    {
+                        name: "HTML Graphics",
+                        topics: ["HTML Canvas", "HTML SVG"]
+                    },
+                    {
+                        name: "HTML Media",
+                        topics: ["HTML Media", "HTML Video", "HTML Audio", "HTML Plug-ins", "HTML YouTube"]
+                    },
+                    {
+                        name: "Web APIs",
+                        topics: [
+                            "Web APIs", "Geolocation API", "Drag and Drop API", 
+                            "Popover API", "Web Storage API", "Web Workers API", "Server-Sent Events API"
+                        ]
+                    },
+                    {
+                        name: "HTML References",
+                        topics: ["HTML Tag List", "HTML Attributes", "HTML Global Attributes", "HTML Events", "HTML Colors"]
+                    }
+                ]
+            },
+            css: {
+                title: "CSS Tutorial",
+                subtitle: "Style and structure your HTML documents effortlessly.",
+                sections: [
+                    {
+                        name: "CSS Tutorial",
+                        topics: [
+                            "CSS HOME", "CSS Introduction", "CSS Syntax", "CSS Selectors", 
+                            "CSS How To", "CSS Comments", "CSS Colors", "CSS Backgrounds", 
+                            "CSS Borders", "CSS Margins", "CSS Padding", "CSS Height / Width", 
+                            "CSS Box Model", "CSS Text", "CSS Fonts", "CSS Display", "CSS Position"
+                        ]
+                    },
+                    {
+                        name: "CSS Advanced",
+                        topics: [
+                            "CSS Rounded Corners", "CSS Gradients", "CSS Shadows", 
+                            "CSS 2D Transforms", "CSS 3D Transforms", "CSS Transitions", "CSS Animations"
+                        ]
+                    },
+                    {
+                        name: "CSS Flexbox",
+                        topics: ["Flexbox Intro", "Flex Container", "Flex Items", "Flex Responsive"]
+                    },
+                    {
+                        name: "CSS Grid",
+                        topics: ["Grid Intro", "Grid Container", "Grid Items", "Grid 12-column Layout"]
+                    }
+                ]
+            },
+            js: {
+                title: "JavaScript Tutorial",
+                subtitle: "The world's most popular programming language for web dynamic behaviors.",
+                sections: [
+                    {
+                        name: "JS Tutorial",
+                        topics: [
+                            "JS Home", "JS Introduction", "JS Where To", "JS Syntax", 
+                            "JS Variables", "JS Operators", "JS Data Types", "JS Functions", 
+                            "JS Objects", "JS Arrays", "JS If Conditions", "JS Loops"
+                        ]
+                    },
+                    {
+                        name: "JS Web API",
+                        topics: ["JS Window API", "JS Fetch API", "JS JSON", "JS Web API"]
+                    },
+                    {
+                        name: "JS Advanced",
+                        topics: ["JS Classes", "JS Asynchronous", "JS Modules", "JS DOM Navigation"]
+                    }
+                ]
+            },
+            sql: {
+                title: "SQL Tutorial",
+                subtitle: "Standard database query language for retrieving and storing data.",
+                sections: [
+                    {
+                        name: "SQL Tutorial",
+                        topics: [
+                            "SQL HOME", "SQL Intro", "SQL Syntax", "SQL Select", 
+                            "SQL Where", "SQL Order By", "SQL Insert Into", "SQL Update", "SQL Delete"
+                        ]
+                    },
+                    {
+                        name: "SQL Database",
+                        topics: ["SQL Create DB", "SQL Create Table", "SQL Constraints", "SQL Primary Key", "SQL Foreign Key"]
+                    }
+                ]
+            },
+            python: {
+                title: "Python Tutorial",
+                subtitle: "A powerful, easy-to-learn language for web development, AI, and scripts.",
+                sections: [
+                    {
+                        name: "Python Tutorial",
+                        topics: [
+                            "Python HOME", "Python Intro", "Python Syntax", "Python Variables", 
+                            "Python Data Types", "Python Lists", "Python Dictionaries", "Python Functions"
+                        ]
+                    },
+                    {
+                        name: "Python Classes",
+                        topics: ["Python OOP", "Python Classes/Objects", "Python Inheritance"]
+                    },
+                    {
+                        name: "Machine Learning",
+                        topics: ["Getting Started", "Mean Median Mode", "Linear Regression", "Decision Tree"]
+                    }
+                ]
+            },
+            java: {
+                title: "Java Tutorial",
+                subtitle: "A high-level, class-based, object-oriented programming language.",
+                sections: [
+                    {
+                        name: "Java Tutorial",
+                        topics: ["Java HOME", "Java Intro", "Java Syntax", "Java Variables", "Java Operators"]
+                    },
+                    {
+                        name: "Java Classes",
+                        topics: ["Java OOP", "Java Classes/Objects", "Java Constructors", "Java Inheritance"]
+                    }
+                ]
+            },
+            php: {
+                title: "PHP Tutorial",
+                subtitle: "Popular server-side scripting language for web application backends.",
+                sections: [
+                    {
+                        name: "PHP Tutorial",
+                        topics: ["PHP HOME", "PHP Intro", "PHP Syntax", "PHP Variables", "PHP Functions"]
+                    }
+                ]
+            },
+            c: {
+                title: "C Language Tutorial",
+                subtitle: "General-purpose programming language for systems and embedded development.",
+                sections: [
+                    {
+                        name: "C Tutorial",
+                        topics: ["C HOME", "C Intro", "C Syntax", "C Variables", "C Pointers", "C Functions"]
+                    }
+                ]
+            },
+            cpp: {
+                title: "C++ Tutorial",
+                subtitle: "High-performance object-oriented programming language extension of C.",
+                sections: [
+                    {
+                        name: "C++ Tutorial",
+                        topics: ["C++ HOME", "C++ Intro", "C++ Syntax", "C++ Variables", "C++ OOP", "C++ Vectors"]
+                    }
+                ]
+            },
+            csharp: {
+                title: "C# Tutorial",
+                subtitle: "Modern, object-oriented language developed by Microsoft for web & desktop.",
+                sections: [
+                    {
+                        name: "C# Tutorial",
+                        topics: ["C# HOME", "C# Intro", "C# Syntax", "C# Variables", "C# Methods", "C# Classes"]
+                    }
+                ]
+            },
+            react: {
+                title: "React Tutorial",
+                subtitle: "JavaScript library for building modular, high-speed user interfaces.",
+                sections: [
+                    {
+                        name: "React Tutorial",
+                        topics: ["React Home", "React Intro", "React JSX Intro", "React Components", "React Props", "React useState"]
+                    }
+                ]
+            },
+            mysql: {
+                title: "MySQL Tutorial",
+                subtitle: "The world's most popular open-source relational database management system.",
+                sections: [
+                    {
+                        name: "MySQL Tutorial",
+                        topics: ["MySQL HOME", "MySQL Intro", "MySQL SELECT", "MySQL WHERE", "MySQL JOINS"]
+                    }
+                ]
+            }
+        };
+
+        // MOCK CONTENT ENGINE PROVIDING COMPREHENSIVE DETAILED LESSONS FOR EVERY TOPIC
+        function getTopicContent(course, topicName) {
+            const courseCodeSamples = {
+                html: `<!DOCTYPE html>\n<html>\n<head>\n  <title>DevDocs Page</title>\n</head>\n<body>\n  <h1 style="color:#16a34a;">Hello World from ${topicName}!</h1>\n  <p>HTML is the foundation for web structure.</p>\n  <button onclick="alert('Button Clicked!')">Click Me</button>\n</body>\n</html>`,
+                css: `/* CSS Styling Sample */\nbody {\n  font-family: Arial, sans-serif;\n  background-color: #f0fdf4;\n  padding: 20px;\n}\nh1 {\n  color: #15803d;\n  border-bottom: 2px solid #22c55e;\n}`,
+                js: `// JavaScript Execution Example\nfunction calculateSum(a, b) {\n  return a + b;\n}\n\nconst result = calculateSum(15, 27);\nconsole.log("Calculated Sum: " + result);\n\ndocument.body.innerHTML = '<h2>JS Execution Result: ' + result + '</h2>';`,
+                python: `# Python Program\ndef greet(name):\n    return f"Hello, {name}! Welcome to ${topicName}."\n\nmessage = greet("Developer")\nprint(message)\nprint("Calculated Square:", [x**2 for x in range(5)])`,
+                java: `public class Main {\n    public static void main(String[] args) {\n        System.out.println("Executing Java Topic: ${topicName}");\n        int sum = 0;\n        for (int i = 1; i <= 5; i++) {\n            sum += i;\n        }\n        System.out.println("Sum of numbers 1 to 5: " + sum);\n    }\n}`,
+                sql: `-- SQL Database Query Demonstration\nSELECT id, name, email, status\nFROM users\nWHERE status = 'active'\nORDER BY name ASC;`,
+                cpp: `#include <iostream>\nusing namespace std;\n\nint main() {\n    cout << "Executing C++ Concept: ${topicName}" << endl;\n    return 0;\n}`,
+                react: `// React Functional Component\nfunction App() {\n  const [count, setCount] = React.useState(0);\n  return (\n    <div style={{padding: '20px', textFont: 'sans-serif'}}>\n      <h2>React State Counter</h2>\n      <p>Current Count: {count}</p>\n      <button onClick={() => setCount(count + 1)}>Increment</button>\n    </div>\n  );\n}`
+            };
+
+            const sampleCode = courseCodeSamples[course] || `// Code snippet for ${topicName}\nconsole.log("Welcome to ${topicName}");`;
+
+            return {
+                title: topicName,
+                subtitle: `In-depth breakdown and practical usage of ${topicName}.`,
+                htmlContent: `
+                    <p class="text-base leading-relaxed">
+                        Welcome to the official <strong>${topicName}</strong> guide. In web development and software engineering, understanding ${topicName} provides key architectural advantages.
+                    </p>
+                    <div class="bg-brand-50 dark:bg-brand-900/30 border-l-4 border-brand-500 p-4 rounded-r-lg my-4">
+                        <p class="text-sm font-semibold text-brand-900 dark:text-brand-300">
+                            💡 Key takeaway: Always structure code cleanly, test edge cases, and maintain standards.
+                        </p>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-800 dark:text-gray-100 mt-4 mb-2">Syntax & Implementation</h3>
+                    <p class="text-sm">Below is a practical code representation showing how to execute this topic in real applications:</p>
+                `,
+                snippet: sampleCode,
+                quiz: {
+                    question: `What is the primary role of ${topicName} in programming?`,
+                    options: [
+                        `To structure and manage runtime behavior efficiently`,
+                        `To replace hardware functionality`,
+                        `To operate strictly on mainframe computers`,
+                        `None of the above`
+                    ],
+                    correctIndex: 0,
+                    explanation: `${topicName} provides standardized structures for runtime execution and code optimization.`
+                }
+            };
+        }
+
+        // STATE APP MANAGEMENT
+        let currentState = {
+            lang: 'EN',
+            course: 'html',
+            topic: 'HTML HOME',
+            score: 0
+        };
+
+        // DOM ELEMENTS
+        const sidebarContent = document.getElementById('sidebar-content');
+        const topicTitle = document.getElementById('topic-title');
+        const topicSubtitle = document.getElementById('topic-subtitle');
+        const topicBody = document.getElementById('topic-body');
+        const codeSnippetBox = document.getElementById('code-snippet-box');
+        const bcCourse = document.getElementById('bc-course');
+        const bcSection = document.getElementById('bc-section');
+        const bcTopic = document.getElementById('bc-topic');
+        const quizQuestion = document.getElementById('quiz-question');
+        const quizOptions = document.getElementById('quiz-options');
+        const quizFeedback = document.getElementById('quiz-feedback');
+        const quizScore = document.getElementById('quiz-score');
+
+        // SANDBOX DRAWER ELEMENTS
+        const sandboxDrawer = document.getElementById('sandbox-drawer');
+        const openSandboxBtn = document.getElementById('open-sandbox-btn');
+        const launchEditorBtn = document.getElementById('launch-editor-btn');
+        const closeSandboxBtn = document.getElementById('close-sandbox-btn');
+        const runCodeBtn = document.getElementById('run-code-btn');
+        const sandboxCodeInput = document.getElementById('sandbox-code-input');
+        const sandboxIframe = document.getElementById('sandbox-iframe');
+        const sandboxTerminal = document.getElementById('sandbox-terminal');
+        const tabPreviewBtn = document.getElementById('tab-preview-btn');
+        const tabConsoleBtn = document.getElementById('tab-console-btn');
+        const editorLangTag = document.getElementById('editor-lang-tag');
+
+        // RENDER SIDEBAR NAVIGATION
+        function renderSidebar() {
+            const courseData = curriculum[currentState.course];
+            if (!courseData) return;
+
+            sidebarContent.innerHTML = '';
+            
+            courseData.sections.forEach(section => {
+                const groupEl = document.createElement('div');
+                groupEl.className = 'space-y-1';
+                
+                const groupTitle = document.createElement('h3');
+                groupTitle.className = 'text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-2 py-1';
+                groupTitle.innerText = section.name;
+                groupEl.appendChild(groupTitle);
+
+                section.topics.forEach(topic => {
+                    const btn = document.createElement('button');
+                    const isActive = topic.toLowerCase() === currentState.topic.toLowerCase();
+                    btn.className = `w-full text-left px-3 py-1.5 rounded-lg text-sm font-medium transition ${
+                        isActive 
+                            ? 'bg-brand-500 text-white font-semibold' 
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    }`;
+                    btn.innerText = topic;
+                    btn.onclick = () => {
+                        currentState.topic = topic;
+                        loadTopicData();
+                        renderSidebar();
+                        // Auto close mobile drawer if open
+                        document.getElementById('sidebar').classList.add('-translate-x-full');
+                    };
+                    groupEl.appendChild(btn);
+                });
+
+                sidebarContent.appendChild(groupEl);
+            });
+        }
+
+        // LOAD TOPIC CONTENT & QUIZ
+        function loadTopicData() {
+            const data = getTopicContent(currentState.course, currentState.topic);
+            
+            // Breadcrumbs
+            bcCourse.innerText = currentState.course.toUpperCase();
+            bcSection.innerText = "Tutorial";
+            bcTopic.innerText = data.title;
+
+            // Header & Body
+            topicTitle.innerText = data.title;
+            topicSubtitle.innerText = data.subtitle;
+            topicBody.innerHTML = data.htmlContent;
+            codeSnippetBox.innerText = data.snippet;
+
+            // Code Editor Setup
+            sandboxCodeInput.value = data.snippet;
+            editorLangTag.innerText = currentState.course;
+
+            // Quiz Render
+            renderQuiz(data.quiz);
+        }
+
+        // RENDER QUIZ
+        function renderQuiz(quiz) {
+            quizQuestion.innerText = quiz.question;
+            quizOptions.innerHTML = '';
+            quizFeedback.className = 'hidden p-3 rounded-lg text-sm font-medium';
+
+            quiz.options.forEach((opt, idx) => {
+                const optBtn = document.createElement('button');
+                optBtn.className = 'w-full text-left p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-brand-500 hover:bg-brand-50/50 dark:hover:bg-gray-700/50 text-sm font-medium transition flex items-start gap-2';
+                optBtn.innerHTML = `<span class="font-bold text-brand-600">${String.fromCharCode(65 + idx)}.</span> <span>${opt}</span>`;
+                
+                optBtn.onclick = () => {
+                    if (idx === quiz.correctIndex) {
+                        quizFeedback.className = 'p-3 rounded-lg text-sm font-medium bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300';
+                        quizFeedback.innerText = `${i18nData[currentState.lang].correctMsg} ${quiz.explanation}`;
+                        currentState.score += 10;
+                    } else {
+                        quizFeedback.className = 'p-3 rounded-lg text-sm font-medium bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300';
+                        quizFeedback.innerText = `${i18nData[currentState.lang].wrongMsg}`;
+                    }
+                    quizFeedback.classList.remove('hidden');
+                    quizScore.innerText = `Score: ${currentState.score}`;
+                };
+
+                quizOptions.appendChild(optBtn);
+            });
+        }
+
+        // EXECUTE RUN CODE IN PLAYGROUND
+        function executeCode() {
+            const code = sandboxCodeInput.value;
+            const course = currentState.course;
+
+            if (['html', 'css', 'js', 'react'].includes(course)) {
+                // Show Iframe
+                sandboxIframe.classList.remove('hidden');
+                sandboxTerminal.classList.add('hidden');
+
+                let frameDoc = sandboxIframe.contentDocument || sandboxIframe.contentWindow.document;
+                frameDoc.open();
+                if (course === 'react') {
+                    frameDoc.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <script src="https://unpkg.com/react@18/umd/react.development.js"><\/script>
+                            <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"><\/script>
+                            <script src="https://unpkg.com/@babel/standalone/babel.min.js"><\/script>
+                            <script src="https://cdn.tailwindcss.com"><\/script>
+                        </head>
+                        <body class="p-4">
+                            <div id="root"></div>
+                            <script type="text/babel">
+                                ${code}
+                                const container = document.getElementById('root');
+                                const root = ReactDOM.createRoot(container);
+                                root.render(<App />);
+                            <\/script>
+                        </body>
+                        </html>
+                    `);
+                } else {
+                    frameDoc.write(code);
+                }
+                frameDoc.close();
+            } else {
+                // Terminal output simulation for C, C++, Java, Python, SQL, PHP
+                sandboxIframe.classList.add('hidden');
+                sandboxTerminal.classList.remove('hidden');
+
+                sandboxTerminal.innerText = `[DevDocs Virtual Engine: Running ${course.toUpperCase()} Script...]\n\n`;
+                setTimeout(() => {
+                    if (course === 'python') {
+                        sandboxTerminal.innerText += `>>> Executing python main.py...\nHello, Developer! Welcome to ${currentState.topic}.\nCalculated Square: [0, 1, 4, 9, 16]\n\n[Process Finished with Code 0]`;
+                    } else if (course === 'java' || course === 'c' || course === 'cpp') {
+                        sandboxTerminal.innerText += `>>> Compiling binary targets...\n>>> Running compiled executable...\nExecuting ${currentState.topic} logic cleanly.\nSum of numbers 1 to 5: 15\n\n[Process Finished with Exit Status 0]`;
+                    } else if (course === 'sql' || course === 'mysql') {
+                        sandboxTerminal.innerText += `>>> Connecting to local relational database sandbox...\n>>> Query Result:\n+----+-------------------+---------------------+--------+\n| id | name              | email               | status |\n+----+-------------------+---------------------+--------+\n| 10 | Alex Johnson      | alex@devdocs.io     | active |\n| 14 | Maria Garcia      | maria@devdocs.io    | active |\n+----+-------------------+---------------------+--------+\n(2 rows returned in 0.003 sec)`;
+                    } else {
+                        sandboxTerminal.innerText += `>>> Output:\nExecution successful.\n\n[Process Completed]`;
+                    }
+                }, 300);
+            }
+        }
+
+        // EVENT LISTENERS INITIALIZATION
+        document.addEventListener('DOMContentLoaded', () => {
+            // Course Bar Tab Click
+            document.querySelectorAll('.course-tab').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    document.querySelectorAll('.course-tab').forEach(t => {
+                        t.className = 'course-tab px-4 py-2.5 border-b-2 border-transparent hover:text-brand-600 text-gray-600 dark:text-gray-400 whitespace-nowrap';
+                    });
+                    e.target.className = 'course-tab px-4 py-2.5 border-b-2 border-brand-500 text-brand-600 dark:text-brand-400 whitespace-nowrap';
+                    
+                    currentState.course = e.target.getAttribute('data-course');
+                    const firstSection = curriculum[currentState.course].sections[0];
+                    currentState.topic = firstSection.topics[0];
+
+                    renderSidebar();
+                    loadTopicData();
+                });
+            });
+
+            // Mobile Menu Toggle
+            document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+                document.getElementById('sidebar').classList.toggle('-translate-x-full');
+            });
+
+            // Dark/Light Theme Toggle
+            document.getElementById('theme-toggle').addEventListener('click', () => {
+                document.documentElement.classList.toggle('dark');
+            });
+
+            // Sandbox Drawer Open/Close
+            const toggleDrawer = (show) => {
+                if (show) {
+                    sandboxDrawer.classList.remove('translate-x-full');
+                    executeCode();
+                } else {
+                    sandboxDrawer.classList.add('translate-x-full');
+                }
+            };
+
+            openSandboxBtn.addEventListener('click', () => toggleDrawer(true));
+            launchEditorBtn.addEventListener('click', () => toggleDrawer(true));
+            closeSandboxBtn.addEventListener('click', () => toggleDrawer(false));
+            runCodeBtn.addEventListener('click', executeCode);
+
+            // Sandbox Output Tabs
+            tabPreviewBtn.addEventListener('click', () => {
+                tabPreviewBtn.className = 'px-4 py-2 font-medium border-b-2 border-brand-500 text-white';
+                tabConsoleBtn.className = 'px-4 py-2 font-medium border-b-2 border-transparent text-gray-400 hover:text-gray-200';
+                sandboxIframe.classList.remove('hidden');
+                sandboxTerminal.classList.add('hidden');
+            });
+
+            tabConsoleBtn.addEventListener('click', () => {
+                tabConsoleBtn.className = 'px-4 py-2 font-medium border-b-2 border-brand-500 text-white';
+                tabPreviewBtn.className = 'px-4 py-2 font-medium border-b-2 border-transparent text-gray-400 hover:text-gray-200';
+                sandboxIframe.classList.add('hidden');
+                sandboxTerminal.classList.remove('hidden');
+            });
+
+            // Language Selector Change
+            document.getElementById('lang-selector').addEventListener('change', (e) => {
+                currentState.lang = e.target.value;
+                const dict = i18nData[currentState.lang];
+                document.querySelectorAll('[data-i18n]').forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (dict[key]) el.innerText = dict[key];
+                });
+                loadTopicData();
+            });
+
+            // Global Search Bar Engine
+            const searchInput = document.getElementById('global-search');
+            const searchResults = document.getElementById('search-results');
+
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                if (!query) {
+                    searchResults.classList.add('hidden');
+                    return;
+                }
+
+                searchResults.innerHTML = '';
+                let matches = 0;
+
+                Object.keys(curriculum).forEach(cKey => {
+                    curriculum[cKey].sections.forEach(sec => {
+                        sec.topics.forEach(top => {
+                            if (top.toLowerCase().includes(query) && matches < 8) {
+                                matches++;
+                                const item = document.createElement('div');
+                                item.className = 'px-3 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer rounded text-xs sm:text-sm flex justify-between items-center';
+                                item.innerHTML = `<span class="font-medium text-gray-800 dark:text-gray-200">${top}</span> <span class="text-xs uppercase bg-brand-100 text-brand-800 dark:bg-brand-900 dark:text-brand-300 px-2 py-0.5 rounded">${cKey}</span>`;
+                                item.onclick = () => {
+                                    currentState.course = cKey;
+                                    currentState.topic = top;
+                                    
+                                    // Highlight course tab
+                                    document.querySelectorAll('.course-tab').forEach(t => {
+                                        if (t.getAttribute('data-course') === cKey) {
+                                            t.className = 'course-tab px-4 py-2.5 border-b-2 border-brand-500 text-brand-600 dark:text-brand-400 whitespace-nowrap';
+                                        } else {
+                                            t.className = 'course-tab px-4 py-2.5 border-b-2 border-transparent hover:text-brand-600 text-gray-600 dark:text-gray-400 whitespace-nowrap';
+                                        }
+                                    });
+
+                                    renderSidebar();
+                                    loadTopicData();
+                                    searchResults.classList.add('hidden');
+                                    searchInput.value = '';
+                                };
+                                searchResults.appendChild(item);
+                            }
+                        });
+                    });
+                });
+
+                if (matches > 0) {
+                    searchResults.classList.remove('hidden');
+                } else {
+                    searchResults.classList.add('hidden');
+                }
+            });
+
+            // Initial Render
+            renderSidebar();
+            loadTopicData();
+        });
+    </script>
+</body>
+</html>
